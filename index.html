@@ -1,409 +1,314 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Premium 3D Digital Niche</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium 3D Digital Niche</title>
 
-    <!-- Apple SF Pro Font -->
-    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
 
-    <style>
-        :root {
-            /* Ultra Premium Dark Forest Theme */
-            --bg-deep: #010a06;
-            --bg-mid: #031c12;
-            --prism-glow: #2add88;
-            --prism-cyan: #2adfd5;
-            
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-highlight: rgba(255, 255, 255, 0.15);
-            
-            --text-pure-white: #ffffff;
-        }
+<style>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
+:root{
+--bg-deep:#010a06;
+--bg-mid:#031c12;
+--prism-glow:#2add88;
+--glass-bg:rgba(255,255,255,0.03);
+--glass-border:rgba(255,255,255,0.08);
+--glass-highlight:rgba(255,255,255,0.15);
+--text:#ffffff;
+}
 
-        body {
-            background-color: #000;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            background: radial-gradient(circle at center, var(--bg-mid), var(--bg-deep) 100%);
-            
-            /* 👇 Agar aapko piche pure screen (PC view) par bhi image lagani ho to in lines ke aage se /* hata dena 👇 */
-            /* background-image: url('background.jpg'); */
-            /* background-size: cover; */
-            /* background-position: center; */
-        }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'SF Pro Display',sans-serif;
+}
 
-        /* 9:16 Aspect Ratio Phone Container */
-        .device-screen {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-            aspect-ratio: 9 / 16;
-            max-height: 95vh;
-            border-radius: 45px;
-            overflow: hidden;
-            display: flex;
-            align-items: center; 
-            justify-content: center;
-            perspective: 1200px;
+body{
+height:100vh;
+width:100vw;
+overflow:hidden;
+display:flex;
+justify-content:center;
+align-items:center;
 
-            /* 👇 Background Transparent kar diya hai. Tum background.jpg daloge tabhi waisi ki waisi (normal) dikhegi 👇 */
-            background-color: transparent;
-            background-image: url('background.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
+background-image:url("background.jpg");
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+}
 
-        /* Top UI Section */
-        .top-ui {
-            position: absolute;
-            top: 20px; 
-            left: 0;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 14px; 
-            z-index: 10;
-        }
+.app{
+position:relative;
+width:100%;
+height:100%;
+display:flex;
+align-items:center;
+justify-content:center;
+perspective:1200px;
+}
 
-        /* Glass Pills */
-        .glass-pill {
-            background: var(--glass-bg);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border);
-            border-top: 1px solid var(--glass-highlight);
-            border-radius: 30px;
-            padding: 12px 25px;
-            text-align: center;
-            color: var(--text-pure-white);
-            font-size: 0.85rem;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            z-index: 10;
-            max-width: 85%;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-        }
+/* top ui */
 
-        /* 3D Card Container */
-        .card-container {
-            position: relative;
-            width: 82%; 
-            height: 55%; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 5;
-            transform-style: preserve-3d;
-        }
+.top-ui{
+position:absolute;
+top:40px;
+display:flex;
+flex-direction:column;
+gap:14px;
+align-items:center;
+width:100%;
+z-index:10;
+}
 
-        /* Individual Card UI */
-        .card {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border-radius: 30px;
-            border: 1px solid var(--glass-border);
-            border-left: 1px solid var(--glass-highlight);
-            border-top: 1px solid var(--glass-highlight);
-            padding: 45px 25px; 
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-            
-            /* 3D Transition Settings */
-            transition: transform 0.8s cubic-bezier(0.2, 0.9, 0.2, 1), 
-                        opacity 0.8s cubic-bezier(0.2, 0.9, 0.2, 1),
-                        visibility 0.8s;
-            transform-origin: center center;
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
+.glass-pill{
+background:var(--glass-bg);
+backdrop-filter:blur(25px);
+border:1px solid var(--glass-border);
+border-top:1px solid var(--glass-highlight);
+border-radius:30px;
+padding:12px 25px;
+color:#fff;
+font-size:.85rem;
+font-weight:700;
+letter-spacing:2px;
+text-transform:uppercase;
+box-shadow:0 15px 35px rgba(0,0,0,0.4);
+}
 
-        /* 3D Animation States */
-        .card.active {
-            transform: translateZ(0) rotateY(0deg) scale(1);
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
-            z-index: 3;
-        }
+/* card container */
 
-        .card.prev {
-            transform: translateZ(-250px) translateX(-80%) rotateY(25deg) scale(0.8);
-            opacity: 0;
-            visibility: hidden;
-            z-index: 1;
-        }
+.card-container{
+position:relative;
+width:340px;
+height:480px;
+display:flex;
+justify-content:center;
+align-items:center;
+transform-style:preserve-3d;
+}
 
-        .card.next {
-            transform: translateZ(-250px) translateX(80%) rotateY(-25deg) scale(0.8);
-            opacity: 0;
-            visibility: hidden;
-            z-index: 1;
-        }
+/* cards */
 
-        /* Card Content Styling */
-        .section-heading {
-            font-size: 1.45rem; 
-            font-weight: 800;
-            text-transform: uppercase;
-            white-space: nowrap; 
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-bottom: 25px;
-            background: linear-gradient(135deg, #ffffff 20%, var(--prism-glow) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 25px rgba(42, 221, 136, 0.3);
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 15px;
-            text-align: center;
-            line-height: 1.2;
-        }
+.card{
+position:absolute;
+width:100%;
+height:100%;
+background:linear-gradient(145deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01));
+backdrop-filter:blur(30px);
+border-radius:30px;
+border:1px solid var(--glass-border);
+padding:45px 25px;
+display:flex;
+flex-direction:column;
+box-shadow:0 30px 60px rgba(0,0,0,0.6);
 
-        .list-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 16px;
-            font-size: 1rem;
-            color: var(--text-pure-white);
-            font-weight: 500;
-            white-space: normal; 
-            width: 100%;
-            line-height: 1.3;
-        }
+transition:all .8s cubic-bezier(.2,.9,.2,1);
 
-        .list-bullet {
-            width: 5px;
-            height: 5px;
-            background: var(--prism-glow);
-            border-radius: 50%;
-            margin-right: 12px;
-            box-shadow: 0 0 10px var(--prism-glow);
-            flex-shrink: 0;
-        }
+opacity:0;
+visibility:hidden;
+pointer-events:none;
+}
 
-        /* Bottom Section */
-        .bottom-ui {
-            position: absolute;
-            bottom: 40px; 
-            left: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-            width: 100%;
-            z-index: 10;
-        }
+.card.active{
+transform:translateZ(0) scale(1);
+opacity:1;
+visibility:visible;
+pointer-events:auto;
+z-index:3;
+}
 
-        .indicators {
-            display: flex;
-            gap: 10px;
-        }
+.card.prev{
+transform:translateZ(-250px) translateX(-80%) rotateY(25deg) scale(.8);
+opacity:0;
+}
 
-        .dot {
-            width: 8px;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 50%;
-            transition: all 0.5s cubic-bezier(0.2, 0.9, 0.2, 1);
-        }
+.card.next{
+transform:translateZ(-250px) translateX(80%) rotateY(-25deg) scale(.8);
+opacity:0;
+}
 
-        .dot.active {
-            background: var(--prism-glow);
-            box-shadow: 0 0 12px var(--prism-glow);
-            transform: scale(1.3);
-        }
+/* heading */
 
-        .swipe-text {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-weight: 600;
-            white-space: nowrap;
-            animation: pulseText 2s infinite;
-        }
+.section-heading{
+font-size:1.5rem;
+font-weight:800;
+text-transform:uppercase;
+margin-bottom:25px;
+background:linear-gradient(135deg,#fff 20%,var(--prism-glow) 100%);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+border-bottom:1px solid var(--glass-border);
+padding-bottom:15px;
+text-align:center;
+}
 
-        @keyframes pulseText {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
+/* list */
 
-    </style>
+.list-item{
+display:flex;
+align-items:center;
+margin-bottom:16px;
+font-size:1rem;
+color:#fff;
+}
+
+.list-bullet{
+width:6px;
+height:6px;
+background:var(--prism-glow);
+border-radius:50%;
+margin-right:12px;
+box-shadow:0 0 10px var(--prism-glow);
+}
+
+/* bottom ui */
+
+.bottom-ui{
+position:absolute;
+bottom:40px;
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:15px;
+width:100%;
+}
+
+.indicators{
+display:flex;
+gap:10px;
+}
+
+.dot{
+width:8px;
+height:8px;
+background:rgba(255,255,255,.15);
+border-radius:50%;
+transition:.4s;
+}
+
+.dot.active{
+background:var(--prism-glow);
+box-shadow:0 0 12px var(--prism-glow);
+transform:scale(1.3);
+}
+
+.swipe-text{
+color:rgba(255,255,255,.5);
+font-size:.75rem;
+letter-spacing:3px;
+text-transform:uppercase;
+}
+
+</style>
 </head>
+
 <body>
 
-    <div class="device-screen" id="app">
-        
-        <!-- Top Glass UI -->
-        <div class="top-ui">
-            <div class="glass-pill">MY DIGITAL NICHE</div>
-            <div class="glass-pill">CODING & DEVELOPMENT</div>
-        </div>
+<div class="app" id="app">
 
-        <!-- 3D Card Area -->
-        <div class="card-container" id="cardContainer">
-            
-            <div class="card active">
-                <div class="section-heading">PROGRAMMING</div>
-                <div class="list-item"><div class="list-bullet"></div>Frontend Development</div>
-                <div class="list-item"><div class="list-bullet"></div>Backend Development</div>
-                <div class="list-item"><div class="list-bullet"></div>JavaScript Projects</div>
-                <div class="list-item"><div class="list-bullet"></div>Web Animations</div>
-                <div class="list-item"><div class="list-bullet"></div>Creative Coding</div>
-            </div>
+<div class="top-ui">
+<div class="glass-pill">MY DIGITAL NICHE</div>
+<div class="glass-pill">CODING & DEVELOPMENT</div>
+</div>
 
-            <div class="card next">
-                <div class="section-heading">WEBSITE DESIGN</div>
-                <div class="list-item"><div class="list-bullet"></div>Portfolio Websites</div>
-                <div class="list-item"><div class="list-bullet"></div>Business Websites</div>
-                <div class="list-item"><div class="list-bullet"></div>E-commerce Websites</div>
-                <div class="list-item"><div class="list-bullet"></div>Landing Pages</div>
-                <div class="list-item"><div class="list-bullet"></div>Animated Websites</div>
-            </div>
+<div class="card-container">
 
-            <div class="card next">
-                <div class="section-heading">GRAPHIC DESIGN</div>
-                <div class="list-item"><div class="list-bullet"></div>Poster Design</div>
-                <div class="list-item"><div class="list-bullet"></div>Social Media Graphics</div>
-                <div class="list-item"><div class="list-bullet"></div>Logo Design</div>
-                <div class="list-item"><div class="list-bullet"></div>Brand Identity</div>
-                <div class="list-item"><div class="list-bullet"></div>Typography Design</div>
-            </div>
+<div class="card active">
+<div class="section-heading">PROGRAMMING</div>
+<div class="list-item"><div class="list-bullet"></div>Frontend Development</div>
+<div class="list-item"><div class="list-bullet"></div>Backend Development</div>
+<div class="list-item"><div class="list-bullet"></div>JavaScript Projects</div>
+<div class="list-item"><div class="list-bullet"></div>Web Animations</div>
+<div class="list-item"><div class="list-bullet"></div>Creative Coding</div>
+</div>
 
-            <div class="card next">
-                <div class="section-heading">MOTION DESIGN</div>
-                <div class="list-item"><div class="list-bullet"></div>Motion Graphics</div>
-                <div class="list-item"><div class="list-bullet"></div>UI Animations</div>
-                <div class="list-item"><div class="list-bullet"></div>Website Animations</div>
-                <div class="list-item"><div class="list-bullet"></div>Animated Visuals</div>
-                <div class="list-item"><div class="list-bullet"></div>3D Websites</div>
-            </div>
+<div class="card next">
+<div class="section-heading">WEBSITE DESIGN</div>
+<div class="list-item"><div class="list-bullet"></div>Portfolio Websites</div>
+<div class="list-item"><div class="list-bullet"></div>Business Websites</div>
+<div class="list-item"><div class="list-bullet"></div>E-commerce Websites</div>
+<div class="list-item"><div class="list-bullet"></div>Landing Pages</div>
+<div class="list-item"><div class="list-bullet"></div>Animated Websites</div>
+</div>
 
-            <div class="card next">
-                <div class="section-heading">EVENT WEBSITES</div>
-                <div class="list-item"><div class="list-bullet"></div>Birthday Websites</div>
-                <div class="list-item"><div class="list-bullet"></div>Love & Friendship</div>
-                <div class="list-item"><div class="list-bullet"></div>Festival Websites</div>
-                <div class="list-item"><div class="list-bullet"></div>Invitation Websites</div>
-                <div class="list-item"><div class="list-bullet"></div>Surprise Websites</div>
-            </div>
+<div class="card next">
+<div class="section-heading">GRAPHIC DESIGN</div>
+<div class="list-item"><div class="list-bullet"></div>Poster Design</div>
+<div class="list-item"><div class="list-bullet"></div>Social Media Graphics</div>
+<div class="list-item"><div class="list-bullet"></div>Logo Design</div>
+<div class="list-item"><div class="list-bullet"></div>Brand Identity</div>
+<div class="list-item"><div class="list-bullet"></div>Typography Design</div>
+</div>
 
-            <div class="card next">
-                <div class="section-heading">SPECIAL WEBSITES</div>
-                <div class="list-item"><div class="list-bullet"></div>Interactive Websites</div>
-                <div class="list-item"><div class="list-bullet"></div>3D Websites</div>
-                <div class="list-item"><div class="list-bullet"></div>Creative Websites</div>
-                <div class="list-item"><div class="list-bullet"></div>Animated Websites</div>
-                <div class="list-item"><div class="list-bullet"></div>Experimental Websites</div>
-            </div>
+</div>
 
-        </div>
+<div class="bottom-ui">
+<div class="indicators" id="indicators"></div>
+<div class="swipe-text">Swipe smoothly to explore</div>
+</div>
 
-        <!-- Bottom UI Section -->
-        <div class="bottom-ui">
-            <div class="indicators" id="indicators"></div>
-            <div class="swipe-text">Swipe smoothly to explore</div>
-        </div>
+</div>
 
-    </div>
+<script>
 
-    <script>
-        const cards = document.querySelectorAll('.card');
-        const indicatorsContainer = document.getElementById('indicators');
-        const totalCards = cards.length;
-        let currentIndex = 0;
+const cards=document.querySelectorAll('.card')
+const indicators=document.getElementById('indicators')
 
-        for(let i=0; i<totalCards; i++) {
-            let dot = document.createElement('div');
-            dot.classList.add('dot');
-            if(i === 0) dot.classList.add('active');
-            indicatorsContainer.appendChild(dot);
-        }
-        const dots = document.querySelectorAll('.dot');
+let index=0
 
-        function updateCards() {
-            cards.forEach((card, index) => {
-                card.classList.remove('active', 'prev', 'next');
-                
-                if (index === currentIndex) {
-                    card.classList.add('active');
-                } else if (index < currentIndex) {
-                    card.classList.add('prev');
-                } else {
-                    card.classList.add('next');
-                }
-            });
+cards.forEach((_,i)=>{
+let dot=document.createElement("div")
+dot.className="dot"
+if(i===0)dot.classList.add("active")
+indicators.appendChild(dot)
+})
 
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === currentIndex);
-            });
-        }
+const dots=document.querySelectorAll(".dot")
 
-        let startX = 0;
-        let endX = 0;
-        const app = document.getElementById('app');
+function update(){
 
-        app.addEventListener('touchstart', (e) => {
-            startX = e.changedTouches[0].screenX;
-        }, {passive: true});
+cards.forEach((card,i)=>{
 
-        app.addEventListener('touchend', (e) => {
-            endX = e.changedTouches[0].screenX;
-            handleSwipe();
-        }, {passive: true});
+card.classList.remove("active","prev","next")
 
-        let isDragging = false;
-        app.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            startX = e.clientX;
-        });
-        
-        app.addEventListener('mouseup', (e) => {
-            if(!isDragging) return;
-            isDragging = false;
-            endX = e.clientX;
-            handleSwipe();
-        });
+if(i===index) card.classList.add("active")
+else if(i<index) card.classList.add("prev")
+else card.classList.add("next")
 
-        app.addEventListener('mouseleave', () => {
-            isDragging = false;
-        });
+})
 
-        function handleSwipe() {
-            const threshold = 40;
-            if (startX - endX > threshold && currentIndex < totalCards - 1) {
-                currentIndex++;
-                updateCards();
-            } else if (endX - startX > threshold && currentIndex > 0) {
-                currentIndex--;
-                updateCards();
-            }
-        }
-    </script>
+dots.forEach((d,i)=>{
+d.classList.toggle("active",i===index)
+})
+
+}
+
+let startX=0
+
+document.getElementById("app").addEventListener("touchstart",e=>{
+startX=e.touches[0].clientX
+})
+
+document.getElementById("app").addEventListener("touchend",e=>{
+
+let endX=e.changedTouches[0].clientX
+
+if(startX-endX>40 && index<cards.length-1){
+index++
+update()
+}
+
+if(endX-startX>40 && index>0){
+index--
+update()
+}
+
+})
+
+</script>
+
 </body>
 </html>
