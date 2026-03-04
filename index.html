@@ -61,9 +61,8 @@
             justify-content: center;
             perspective: 1200px;
 
-            /* 👇 Background Transparent kar diya hai. Tum background.jpg daloge tabhi waisi ki waisi (normal) dikhegi 👇 */
-            background-color: transparent;
-            background-image: url('background.jpg');
+            /* 👇 YAHAN APNI IMAGE KA NAAM DAALNA ('background.jpg' ki jagah) 👇 */
+            background: linear-gradient(rgba(1, 10, 6, 0.6), rgba(2, 18, 11, 0.8)), url('background.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -186,7 +185,7 @@
 
         .list-item {
             display: flex;
-            align-items: center;
+            align-items: center; /* FIXED: Isko flex-start se center kar diya hai taaki dot bilkul text ke beech me aaye */
             margin-bottom: 16px;
             font-size: 1rem;
             color: var(--text-pure-white);
@@ -204,6 +203,7 @@
             margin-right: 12px;
             box-shadow: 0 0 10px var(--prism-glow);
             flex-shrink: 0;
+            /* margin-top: 6px; hata diya gaya hai center align karne ke liye */
         }
 
         /* Bottom Section */
