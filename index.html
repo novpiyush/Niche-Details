@@ -327,7 +327,6 @@
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
 
-        // Ye function browser ki audio permission lene ke liye hai (Taaki load delay na aaye)
         function warmUpAudio() {
             if (!audioCtx) {
                 audioCtx = new AudioContext();
@@ -337,17 +336,18 @@
             }
         }
 
-        // Ye ek single tone generate karta hai
-        function playTone(freq, duration, volume, startTime) {
+        // Ab hum type bhi pass kar sakte hain (sine ya triangle)
+        function playTone(freq, duration, volume, startTime, type = 'sine') {
             if (!audioCtx) return;
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            osc.type = 'sine'; // Crystal clear glass tone
+            
+            osc.type = type; // Type set kar diya (Triangle bahut loud hota hai)
             osc.frequency.setValueAtTime(freq, startTime);
             
             gain.gain.setValueAtTime(0, startTime);
-            gain.gain.linearRampToValueAtTime(volume, startTime + duration * 0.05); // Turant aawaz aayegi
-            gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration); // Smooth fade out hogi
+            gain.gain.linearRampToValueAtTime(volume, startTime + duration * 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
             
             osc.connect(gain);
             gain.connect(audioCtx.destination);
@@ -356,15 +356,22 @@
             osc.stop(startTime + duration);
         }
 
-        // --- CRYSTAL CONFIRM (SOUND ID 4) LOGIC ---
+        // --- EXTREME LOUD & CLEAR CRYSTAL CONFIRM ---
         function playCrystalConfirm() {
-            warmUpAudio(); // Make sure audio is ready
+            warmUpAudio(); 
             const t = audioCtx.currentTime;
             
-            // Do frequency quickly bajti hai ek ke baad ek (1200hz phir 0.05s baad 1600hz)
-            // Same as Sound ID 4: playArp([1200, 1600], 0.05, 'sine', 0.1, 0.15, t)
-            playTone(1200, 0.1, 0.15, t);         // Pehli glassy hit
-            playTone(1600, 0.1, 0.15, t + 0.05);  // Dusri high pitch confirm hit
+            // Gain ekdum extreme level par (Clear bina distortion ke)
+            const baseVol = 2.0; 
+            const piercingVol = 1.0; 
+
+            // LAYER 1: Base Glass Tone (Deep Crystal feel ke liye)
+            playTone(1200, 0.15, baseVol, t, 'sine');         
+            playTone(1600, 0.15, baseVol, t + 0.05, 'sine');  
+
+            // LAYER 2: Sharp Piercing Tone (Ye low volume par bhi tez kaan tak pahunchega)
+            playTone(1200, 0.1, piercingVol, t, 'triangle');         
+            playTone(2400, 0.1, piercingVol, t + 0.05, 'triangle'); // Ek scale upar taaki clear chamak aaye
         }
         // ------------------------------------------
 
@@ -435,11 +442,11 @@
             const threshold = 40; 
             if (startX - endX > threshold && currentIndex < totalCards - 1) {
                 currentIndex++;
-                playCrystalConfirm(); // 👈 Kholte hi instantly bajega
+                playCrystalConfirm(); 
                 updateCards();
             } else if (endX - startX > threshold && currentIndex > 0) {
                 currentIndex--;
-                playCrystalConfirm(); // 👈 Yahan bhi instantly bajega
+                playCrystalConfirm(); 
                 updateCards();
             }
         }
