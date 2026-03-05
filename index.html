@@ -329,6 +329,20 @@
     </div>
 
     <script>
+        // --- Added Sound Effect Logic ---
+        const swipeSound = new Audio('preview.mp3');
+        swipeSound.preload = 'auto'; // Preloads the audio for instant playback
+
+        function playSwipeSound() {
+            // Resetting time allows the sound to play multiple times quickly without finishing
+            swipeSound.currentTime = 0; 
+            swipeSound.play().catch(err => {
+                // Silently handle autoplay prevention on load without interactions
+                console.warn('Browser prevented audio playback:', err);
+            });
+        }
+        // --------------------------------
+
         const cards = document.querySelectorAll('.card');
         const indicatorsContainer = document.getElementById('indicators');
         const totalCards = cards.length;
@@ -366,6 +380,7 @@
 
         app.addEventListener('touchstart', (e) => {
             startX = e.changedTouches[0].screenX;
+            playSwipeSound(); // Triggers immediately on drag start (touch)
         }, {passive: true});
 
         app.addEventListener('touchend', (e) => {
@@ -377,6 +392,7 @@
         app.addEventListener('mousedown', (e) => {
             isDragging = true;
             startX = e.clientX;
+            playSwipeSound(); // Triggers immediately on drag start (mouse click)
         });
         
         app.addEventListener('mouseup', (e) => {
