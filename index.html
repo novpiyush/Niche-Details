@@ -40,7 +40,6 @@
             align-items: center;
             overflow: hidden;
             
-            /* 👇 Yaha Pura Full Screen Background Image Set Kar Diya Hai 👇 */
             background-image: url('background.jpg');
             background-size: cover;
             background-position: center;
@@ -60,8 +59,6 @@
             align-items: center; 
             justify-content: center;
             perspective: 1200px;
-
-            /* 👇 Isko transparent rakha hai taki body ka full background ache se dikhe 👇 */
             background-color: transparent;
         }
 
@@ -255,13 +252,11 @@
 
     <div class="device-screen" id="app">
         
-        <!-- Top Glass UI -->
         <div class="top-ui">
             <div class="glass-pill">MY DIGITAL NICHE</div>
             <div class="glass-pill">CODING & DEVELOPMENT</div>
         </div>
 
-        <!-- 3D Card Area -->
         <div class="card-container" id="cardContainer">
             
             <div class="card active">
@@ -320,7 +315,6 @@
 
         </div>
 
-        <!-- Bottom UI Section -->
         <div class="bottom-ui">
             <div class="indicators" id="indicators"></div>
             <div class="swipe-text">Swipe smoothly to explore</div>
@@ -329,19 +323,50 @@
     </div>
 
     <script>
-        // --- Added Sound Effect Logic ---
-        const swipeSound = new Audio('preview.mp3');
-        swipeSound.preload = 'auto'; // Preloads the audio for instant playback
+        // --- ZERO DELAY PREMIUM AUDIO ENGINE ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
 
-        function playSwipeSound() {
-            // Resetting time allows the sound to play multiple times quickly without finishing
-            swipeSound.currentTime = 0; 
-            swipeSound.play().catch(err => {
-                // Silently handle autoplay prevention on load without interactions
-                console.warn('Browser prevented audio playback:', err);
-            });
+        // Ye function browser ki audio permission lene ke liye hai (Taaki load delay na aaye)
+        function warmUpAudio() {
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
         }
-        // --------------------------------
+
+        // Ye ek single tone generate karta hai
+        function playTone(freq, duration, volume, startTime) {
+            if (!audioCtx) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine'; // Crystal clear glass tone
+            osc.frequency.setValueAtTime(freq, startTime);
+            
+            gain.gain.setValueAtTime(0, startTime);
+            gain.gain.linearRampToValueAtTime(volume, startTime + duration * 0.05); // Turant aawaz aayegi
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration); // Smooth fade out hogi
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start(startTime);
+            osc.stop(startTime + duration);
+        }
+
+        // --- CRYSTAL CONFIRM (SOUND ID 4) LOGIC ---
+        function playCrystalConfirm() {
+            warmUpAudio(); // Make sure audio is ready
+            const t = audioCtx.currentTime;
+            
+            // Do frequency quickly bajti hai ek ke baad ek (1200hz phir 0.05s baad 1600hz)
+            // Same as Sound ID 4: playArp([1200, 1600], 0.05, 'sine', 0.1, 0.15, t)
+            playTone(1200, 0.1, 0.15, t);         // Pehli glassy hit
+            playTone(1600, 0.1, 0.15, t + 0.05);  // Dusri high pitch confirm hit
+        }
+        // ------------------------------------------
 
         const cards = document.querySelectorAll('.card');
         const indicatorsContainer = document.getElementById('indicators');
@@ -359,7 +384,6 @@
         function updateCards() {
             cards.forEach((card, index) => {
                 card.classList.remove('active', 'prev', 'next');
-                
                 if (index === currentIndex) {
                     card.classList.add('active');
                 } else if (index < currentIndex) {
@@ -378,9 +402,10 @@
         let endX = 0;
         const app = document.getElementById('app');
 
+        // PRE-WARM AUDIO on touch/mouse start so it plays INSTANTLY on swipe
         app.addEventListener('touchstart', (e) => {
+            warmUpAudio(); 
             startX = e.changedTouches[0].screenX;
-            playSwipeSound(); // Triggers immediately on drag start (touch)
         }, {passive: true});
 
         app.addEventListener('touchend', (e) => {
@@ -390,9 +415,9 @@
 
         let isDragging = false;
         app.addEventListener('mousedown', (e) => {
+            warmUpAudio(); // Pre-warm for PC/Mouse users
             isDragging = true;
             startX = e.clientX;
-            playSwipeSound(); // Triggers immediately on drag start (mouse click)
         });
         
         app.addEventListener('mouseup', (e) => {
@@ -407,12 +432,14 @@
         });
 
         function handleSwipe() {
-            const threshold = 40;
+            const threshold = 40; 
             if (startX - endX > threshold && currentIndex < totalCards - 1) {
                 currentIndex++;
+                playCrystalConfirm(); // 👈 Kholte hi instantly bajega
                 updateCards();
             } else if (endX - startX > threshold && currentIndex > 0) {
                 currentIndex--;
+                playCrystalConfirm(); // 👈 Yahan bhi instantly bajega
                 updateCards();
             }
         }
